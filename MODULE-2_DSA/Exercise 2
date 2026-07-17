@@ -1,0 +1,78 @@
+class Product
+{
+    int productId;
+    String productName;
+    String category;
+
+    Product(int id, String name, String cat)
+    {
+        productId = id;
+        productName = name;
+        category = cat;
+    }
+}
+
+
+class SearchTest
+{
+    static void linearSearch(Product p[], int key)
+    {
+        for(int i=0;i<p.length;i++)
+        {
+            if(p[i].productId==key)
+            {
+                System.out.println("Product Found");
+                System.out.println(p[i].productId+" "+p[i].productName+" "+p[i].category);
+                return;
+            }
+        }
+        System.out.println("Product Not Found");
+    }
+
+    static void binarySearch(Product p[], int key)
+    {
+        int low=0;
+        int high=p.length-1;
+
+        while(low<=high)
+        {
+            int mid=(low+high)/2;
+
+            if(p[mid].productId==key)
+            {
+                System.out.println("Product Found");
+                System.out.println(p[mid].productId+" "+p[mid].productName+" "+p[mid].category);
+                return;
+            }
+            else if(key<p[mid].productId)
+            {
+                high=mid-1;
+            }
+            else
+            {
+                low=mid+1;
+            }
+        }
+
+        System.out.println("Product Not Found");
+    }
+
+    public static void main(String args[])
+    {
+        Product p[]={
+            new Product(101,"Laptop","Electronics"),
+            new Product(102,"Mobile","Electronics"),
+            new Product(103,"Shoes","Fashion"),
+            new Product(104,"Watch","Accessories"),
+            new Product(105,"Bag","Travel")
+        };
+
+        System.out.println("Linear Search");
+        linearSearch(p,103);
+
+        System.out.println();
+
+        System.out.println("Binary Search");
+        binarySearch(p,103);
+    }
+}

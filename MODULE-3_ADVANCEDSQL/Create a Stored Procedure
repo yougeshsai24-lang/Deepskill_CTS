@@ -1,0 +1,13 @@
+CREATE PROCEDURE sp_GetEmployeeByDepartment
+    @DepartmentID INT
+AS
+BEGIN
+    SELECT EmployeeID,
+           FirstName,
+           LastName,
+           DepartmentID,
+           Salary,
+           JoinDate
+    FROM Employees
+    WHERE DepartmentID = @DepartmentID;
+END;

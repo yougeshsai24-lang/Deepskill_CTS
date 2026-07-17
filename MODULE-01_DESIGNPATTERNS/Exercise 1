@@ -1,0 +1,48 @@
+TEST:
+class Test
+{
+    public static void main(String args[])
+    {
+        Logger l1 = Logger.getInstance();
+        Logger l2 = Logger.getInstance();
+
+        l1.display("First Message");
+        l2.display("Second Message");
+
+        if(l1 == l2)
+        {
+            System.out.println("Same Object");
+        }
+        else
+        {
+            System.out.println("Different Objects");
+        }
+    }
+}
+
+
+
+
+LOGGER:
+class Logger
+{
+    static Logger obj;
+
+    private Logger()
+    {
+    }
+
+    static Logger getInstance()
+    {
+        if(obj == null)
+        {
+            obj = new Logger();
+        }
+        return obj;
+    }
+
+    void display(String msg)
+    {
+        System.out.println(msg);
+    }
+}

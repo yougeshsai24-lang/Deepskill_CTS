@@ -1,0 +1,37 @@
+CREATE DATABASE ProductDB;
+USE ProductDB;
+
+CREATE TABLE Products (
+    ProductID INT PRIMARY KEY,
+    ProductName VARCHAR(50),
+    Category VARCHAR(50),
+    Price DECIMAL(10,2)
+);
+
+INSERT INTO Products VALUES
+(1,'Laptop','Electronics',70000),
+(2,'Mobile','Electronics',50000),
+(3,'Headphones','Electronics',5000),
+(4,'TV','Electronics',70000),
+(5,'Shirt','Clothing',2000),
+(6,'Jeans','Clothing',2500),
+(7,'Jacket','Clothing',2500),
+(8,'Shoes','Clothing',3000),
+(9,'Table','Furniture',8000),
+(10,'Chair','Furniture',4000),
+(11,'Sofa','Furniture',25000),
+(12,'Bed','Furniture',25000);
+
+SELECT *
+FROM
+(
+    SELECT ProductID,
+           ProductName,
+           Category,
+           Price,
+           ROW_NUMBER() OVER(PARTITION BY Category ORDER BY Price DESC) AS RowNo,
+           RANK() OVER(PARTITION BY Category ORDER BY Price DESC) AS RankNo,
+           DENSE_RANK() OVER(PARTITION BY Category ORDER BY Price DESC) AS DenseRank
+    FROM Products
+) AS T
+WHERE RowNo <= 3;

@@ -1,0 +1,50 @@
+What is ORM?
+
+ORM (Object Relational Mapping) is a technique that maps C# classes to database tables. It allows developers to work with database data as C# objects instead of writing SQL queries manually.
+
+Benefits
+Increases productivity.
+Easy to maintain.
+Reduces SQL code.
+Provides abstraction from the database.
+
+
+EF Core vs EF Framework
+
+EF Core
+Cross-platform	
+Lightweight	
+Better performance	
+Supports LINQ	
+Supports Async Queries	
+Modern and flexible
+
+
+EF Framework (EF6)
+Windows only
+Heavier
+Slower
+Supports LINQ
+Supports Async Queries
+Mature but less flexible
+
+EF Core 8.0 Features
+JSON column mapping.
+Improved performance with compiled models.
+Interceptors.
+Better bulk operations.
+Faster query execution.
+
+
+
+
+code:
+using System;
+
+class Program
+{
+    static void Main(string[] args)
+    {
+        Console.WriteLine("Retail Inventory System using EF Core");
+    }
+}

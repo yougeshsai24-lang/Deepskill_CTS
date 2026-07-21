@@ -1,0 +1,111 @@
+program.cs
+
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+
+builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+app.UseSwagger();
+
+app.UseSwaggerUI();
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+
+
+
+employee.cs
+
+namespace MyFirstApi.Models
+{
+    public class Employee
+    {
+        public int Id { get; set; }
+
+        public string Name { get; set; } = string.Empty;
+
+        public int Salary { get; set; }
+
+        public bool Permanent { get; set; }
+
+        public string Department { get; set; } = string.Empty;
+
+        public List<string> Skills { get; set; } = new();
+
+        public DateTime DateOfBirth { get; set; }
+    }
+}
+
+
+employeecontroller.cs
+
+using Microsoft.AspNetCore.Mvc;
+using MyFirstApi.Models;
+
+namespace MyFirstApi.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class EmployeeController : ControllerBase
+    {
+        private static List<Employee> employees = new List<Employee>()
+        {
+            new Employee
+            {
+                Id = 1,
+                Name = "John",
+                Salary = 50000,
+                Permanent = true,
+                Department = "HR",
+                Skills = new List<string>{"C#","SQL"},
+                DateOfBirth = new DateTime(1998,5,12)
+            },
+
+            new Employee
+            {
+                Id = 2,
+                Name = "Alice",
+                Salary = 65000,
+                Permanent = false,
+                Department = "IT",
+                Skills = new List<string>{"ASP.NET","Azure"},
+                DateOfBirth = new DateTime(1999,8,10)
+            }
+        };
+
+        [HttpPut("{id}")]
+        public ActionResult<Employee> Put(int id, [FromBody] Employee employee)
+        {
+            if (id <= 0)
+            {
+                return BadRequest("Invalid employee id");
+            }
+
+            var emp = employees.FirstOrDefault(x => x.Id == id);
+
+            if (emp == null)
+            {
+                return BadRequest("Invalid employee id");
+            }
+
+            emp.Name = employee.Name;
+            emp.Salary = employee.Salary;
+            emp.Permanent = employee.Permanent;
+            emp.Department = employee.Department;
+            emp.Skills = employee.Skills;
+            emp.DateOfBirth = employee.DateOfBirth;
+
+            return Ok(emp);
+        }
+    }
+}

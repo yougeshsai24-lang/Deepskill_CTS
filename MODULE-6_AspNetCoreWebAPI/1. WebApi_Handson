@@ -1,0 +1,80 @@
+Program.cs
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddControllers();
+
+var app = builder.Build();
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
+
+app.MapControllers();
+
+app.Run();
+
+
+
+
+
+ValueController.cs
+using Microsoft.AspNetCore.Mvc;
+
+namespace MyFirstApi.Controllers
+{
+    [ApiController]
+    [Route("api/[controller]")]
+    public class ValuesController : ControllerBase
+    {
+        private static List<string> values = new List<string>
+        {
+            "Apple",
+            "Mango",
+            "Orange"
+        };
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return Ok(values);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            if (id < 0 || id >= values.Count)
+                return BadRequest("Invalid Id");
+
+            return Ok(values[id]);
+        }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] string value)
+        {
+            values.Add(value);
+            return Ok("Value Added");
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] string value)
+        {
+            if (id < 0 || id >= values.Count)
+                return BadRequest("Invalid Id");
+
+            values[id] = value;
+
+            return Ok("Value Updated");
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            if (id < 0 || id >= values.Count)
+                return BadRequest("Invalid Id");
+
+            values.RemoveAt(id);
+
+            return Ok("Value Deleted");
+        }
+    }
+}

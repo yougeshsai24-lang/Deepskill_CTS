@@ -1,0 +1,107 @@
+course actions.ts
+
+import { createAction, props } from '@ngrx/store';
+import { Course } from '../../models/course.model';
+
+export const loadCourses = createAction(
+  '[Course] Load Courses'
+);
+
+export const loadCoursesSuccess = createAction(
+  '[Course] Load Courses Success',
+  props<{ courses: Course[] }>()
+);
+
+export const loadCoursesFailure = createAction(
+  '[Course] Load Courses Failure',
+  props<{ error: string }>()
+);
+
+
+
+course effects.ts
+
+import { Injectable } from '@angular/core';
+
+@Injectable()
+export class CourseEffects {}
+
+
+
+
+course selectors.ts
+
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { CourseState } from './course-state';
+
+export const selectCourseState =
+  createFeatureSelector<CourseState>('courses');
+
+export const selectAllCourses =
+  createSelector(
+    selectCourseState,
+    state => state.courses
+  );
+
+export const selectLoading =
+  createSelector(
+    selectCourseState,
+    state => state.loading
+  );
+
+export const selectError =
+  createSelector(
+    selectCourseState,
+    state => state.error
+  );
+
+
+
+
+cource reducer.ts
+
+import { createReducer, on } from '@ngrx/store';
+import * as CourseActions from './course.actions';
+import { initialState } from './course-state';
+
+export const courseReducer = createReducer(
+
+  initialState,
+
+  on(CourseActions.loadCourses, state => ({
+    ...state,
+    loading: true
+  })),
+
+  on(CourseActions.loadCoursesSuccess, (state, { courses }) => ({
+    ...state,
+    courses,
+    loading: false,
+    error: null
+  })),
+
+  on(CourseActions.loadCoursesFailure, (state, { error }) => ({
+    ...state,
+    loading: false,
+    error
+  }))
+);
+
+
+
+
+course state.ts
+
+import { Course } from '../../models/course.model';
+
+export interface CourseState {
+  courses: Course[];
+  loading: boolean;
+  error: string | null;
+}
+
+export const initialState: CourseState = {
+  courses: [],
+  loading: false,
+  error: null
+};

@@ -1,0 +1,234 @@
+db.json
+
+{
+  "courses": [
+    {
+      "id": 1,
+      "name": "Angular",
+      "code": "ANG101",
+      "credits": 4,
+      "gradeStatus": "passed"
+    },
+    {
+      "id": 2,
+      "name": "React",
+      "code": "REA201",
+      "credits": 3,
+      "gradeStatus": "pending"
+    },
+    {
+      "id": 3,
+      "name": "NodeJS",
+      "code": "NOD301",
+      "credits": 4,
+      "gradeStatus": "failed"
+    }
+  ]
+}
+
+
+enrollment.ts
+
+import { Injectable } from '@angular/core';
+import { Observable, map } from 'rxjs';
+import { CourseService } from './course';
+import { Course } from '../models/course.model';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class EnrollmentService {
+
+  private enrolledCourseIds: number[] = [];
+
+  constructor(private courseService: CourseService) {}
+
+  enroll(courseId: number): void {
+    if (!this.enrolledCourseIds.includes(courseId)) {
+      this.enrolledCourseIds.push(courseId);
+    }
+  }
+
+  unenroll(courseId: number): void {
+    this.enrolledCourseIds =
+      this.enrolledCourseIds.filter(id => id !== courseId);
+  }
+
+  isEnrolled(courseId: number): boolean {
+    return this.enrolledCourseIds.includes(courseId);
+  }
+
+  getEnrolledCourses(): Observable<Course[]> {
+    return this.courseService.getCourses().pipe(
+      map((courses: Course[]) =>
+        courses.filter((c: Course) =>
+          this.enrolledCourseIds.includes(c.id)
+        )
+      )
+    );
+  }
+}
+
+
+
+app config.ts
+
+import { ApplicationConfig } from '@angular/core';
+import { provideRouter } from '@angular/router';
+
+import {
+  provideHttpClient,
+  withInterceptors
+} from '@angular/common/http';
+
+import { routes } from './app.routes';
+import { authInterceptor } from './interceptors/auth-interceptor';
+
+export const appConfig: ApplicationConfig = {
+  providers: [
+    provideRouter(routes),
+
+    provideHttpClient(
+      withInterceptors([
+        authInterceptor
+      ])
+    )
+  ]
+};
+
+
+
+aut interceptor.ts
+
+import {
+  HttpInterceptorFn
+} from '@angular/common/http';
+
+export const authInterceptor: HttpInterceptorFn =
+(req, next) => {
+
+  const clone = req.clone({
+
+    setHeaders: {
+
+      Authorization:
+      'Bearer mock-token-12345'
+
+    }
+
+  });
+
+  return next(clone);
+
+};
+
+
+
+course list.ts
+
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+import { CourseService } from '../../services/course';
+import { Course } from '../../models/course.model';
+
+@Component({
+  selector: 'app-course-list',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './course-list.html',
+  styleUrl: './course-list.css'
+})
+export class CourseList implements OnInit {
+
+  courses: Course[] = [];
+
+  errorMessage = '';
+
+  isLoading = true;
+
+  constructor(private courseService: CourseService) {}
+
+  ngOnInit(): void {
+
+    this.courseService
+      .getCourses()
+      .subscribe({
+
+        next: data => {
+
+          this.courses = data;
+
+        },
+
+        error: err => {
+
+          this.errorMessage = err.message;
+
+        },
+
+        complete: () => {
+
+          this.isLoading = false;
+
+        }
+
+      });
+
+  }
+
+}
+
+courses.ts
+
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Course } from '../models/course.model';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class CourseService {
+
+  private api =
+    'http://localhost:3000/courses';
+
+  constructor(private http: HttpClient) {}
+
+  getCourses(): Observable<Course[]> {
+
+    return this.http.get<Course[]>(this.api);
+
+  }
+
+  getCourseById(id: number): Observable<Course> {
+
+    return this.http.get<Course>(`${this.api}/${id}`);
+
+  }
+
+  createCourse(course: Omit<Course, 'id'>): Observable<Course> {
+
+    return this.http.post<Course>(this.api, course);
+
+  }
+
+  updateCourse(course: Course): Observable<Course> {
+
+    return this.http.put<Course>(
+      `${this.api}/${course.id}`,
+      course
+    );
+
+  }
+
+  deleteCourse(id: number): Observable<void> {
+
+    return this.http.delete<void>(
+      `${this.api}/${id}`
+    );
+
+  }
+
+}

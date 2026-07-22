@@ -1,0 +1,77 @@
+Header.html
+
+<nav>
+  <h2>Student Course Portal</h2>
+
+  <a>Home</a>
+
+  <a>Courses</a>
+
+  <a>Profile</a>
+</nav>
+
+
+app.ts
+
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+
+import { Header } from './components/header/header';
+import { Home } from './pages/home/home';
+
+@Component({
+  selector: 'app-root',
+  standalone: true,
+  imports: [RouterOutlet, Header, Home],
+  templateUrl: './app.html',
+  styleUrl: './app.css'
+})
+export class App {
+  title = 'student-course-portal';
+}
+
+
+
+header.css
+
+nav{
+    background:#1976d2;
+    padding:15px;
+}
+
+nav h2{
+    display:inline;
+    color:white;
+    margin-right:40px;
+}
+
+nav a{
+    color:white;
+    margin-right:20px;
+    text-decoration:none;
+    font-size:18px;
+}
+
+
+
+home.html
+
+<h1>Welcome to Student Course Portal</h1>
+
+<p>Manage your courses and profile easily.</p>
+
+<div>
+    <p>Courses Available : 12</p>
+    <p>Enrolled : 3</p>
+    <p>GPA : 3.8</p>
+</div>
+
+
+
+app.html
+
+<app-header></app-header>
+
+<app-home></app-home>
+
+<router-outlet></router-outlet>

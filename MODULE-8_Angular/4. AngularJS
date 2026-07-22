@@ -1,0 +1,150 @@
+app router.ts
+
+import { Routes } from '@angular/router';
+import { EnrollmentForm } from './pages/enrollment-form/enrollment-form';
+
+export const routes: Routes = [
+
+{
+path:'enroll',
+component:EnrollmentForm
+}
+
+];
+
+
+
+enrollment form.html
+
+<form #enrollForm="ngForm" (ngSubmit)="onSubmit(enrollForm)">
+
+<label>Name</label>
+
+<input
+type="text"
+name="studentName"
+required
+minlength="3"
+[(ngModel)]="student.studentName"
+#nameCtrl="ngModel">
+
+<div *ngIf="nameCtrl.touched && nameCtrl.errors?.['required']">
+Name is required
+</div>
+
+<div *ngIf="nameCtrl.touched && nameCtrl.errors?.['minlength']">
+Minimum 3 characters
+</div>
+
+<br><br>
+
+<label>Email</label>
+
+<input
+type="email"
+name="studentEmail"
+required
+email
+[(ngModel)]="student.studentEmail"
+#emailCtrl="ngModel">
+
+<div *ngIf="emailCtrl.touched && emailCtrl.errors?.['required']">
+Email required
+</div>
+
+<br><br>
+
+<label>Course ID</label>
+
+<input
+type="number"
+name="courseId"
+required
+[(ngModel)]="student.courseId">
+
+<br><br>
+
+<label>Semester</label>
+
+<select
+name="preferredSemester"
+[(ngModel)]="student.preferredSemester">
+
+<option>Odd</option>
+
+<option>Even</option>
+
+</select>
+
+<br><br>
+
+<label>
+
+<input
+type="checkbox"
+name="agreeToTerms"
+required
+[(ngModel)]="student.agreeToTerms">
+
+Agree Terms
+
+</label>
+
+<br><br>
+
+<button
+type="submit"
+[disabled]="enrollForm.invalid">
+
+Submit
+
+</button>
+
+<button
+type="reset"
+(click)="enrollForm.resetForm()">
+
+Reset
+
+</button>
+
+</form>
+
+<div *ngIf="submitted">
+
+<h3>Enrollment request submitted successfully!</h3>
+
+</div>
+
+
+enrollment form.ts
+
+import { Component } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+
+@Component({
+  selector: 'app-enrollment-form',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './enrollment-form.html',
+  styleUrl: './enrollment-form.css'
+})
+export class EnrollmentForm {
+
+  submitted = false;
+
+  student = {
+    studentName: '',
+    studentEmail: '',
+    courseId: '',
+    preferredSemester: 'Odd',
+    agreeToTerms: false
+  };
+
+  onSubmit(form: NgForm) {
+    console.log(form.value);
+    console.log(form.valid);
+    this.submitted = true;
+  }
+}

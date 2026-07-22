@@ -1,0 +1,38 @@
+home.ts
+
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  selector: 'app-home',
+  standalone: true,
+  imports: [FormsModule],
+  templateUrl: './home.html',
+  styleUrl: './home.css',
+})
+export class Home {
+  portalName = 'Student Course Portal';
+  isPortalActive = true;
+  message = '';
+  searchTerm = '';
+
+  onEnrollClick() {
+    this.message = 'Enrollment opened!';
+  }
+}
+
+
+
+
+header.ts
+
+import { Component } from '@angular/core';
+
+@Component({
+  selector: 'app-header',
+  standalone: true,
+  imports: [],
+  templateUrl: './header.html',
+  styleUrl: './header.css',
+})
+export class Header {}

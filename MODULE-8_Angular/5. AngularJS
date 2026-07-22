@@ -1,0 +1,392 @@
+enrollment form.ts
+
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule, NgForm } from '@angular/forms';
+
+@Component({
+  selector: 'app-enrollment-form',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './enrollment-form.html',
+  styleUrl: './enrollment-form.css'
+})
+export class EnrollmentForm {
+
+  submitted = false;
+
+  student = {
+    studentName: '',
+    studentEmail: '',
+    courseId: '',
+    preferredSemester: 'Odd',
+    agreeToTerms: false
+  };
+
+  onSubmit(form: NgForm) {
+    console.log(form.value);
+    console.log(form.valid);
+    this.submitted = true;
+  }
+}
+
+
+
+enrollment form.html
+
+<form #enrollForm="ngForm" (ngSubmit)="onSubmit(enrollForm)">
+
+<label>Name</label>
+
+<input
+type="text"
+name="studentName"
+required
+minlength="3"
+[(ngModel)]="student.studentName"
+#nameCtrl="ngModel">
+
+<div *ngIf="nameCtrl.touched && nameCtrl.errors?.['required']">
+Name is required
+</div>
+
+<div *ngIf="nameCtrl.touched && nameCtrl.errors?.['minlength']">
+Minimum 3 characters
+</div>
+
+<br><br>
+
+<label>Email</label>
+
+<input
+type="email"
+name="studentEmail"
+required
+email
+[(ngModel)]="student.studentEmail"
+#emailCtrl="ngModel">
+
+<div *ngIf="emailCtrl.touched && emailCtrl.errors?.['required']">
+Email required
+</div>
+
+<br><br>
+
+<label>Course ID</label>
+
+<input
+type="number"
+name="courseId"
+required
+[(ngModel)]="student.courseId">
+
+<br><br>
+
+<label>Semester</label>
+
+<select
+name="preferredSemester"
+[(ngModel)]="student.preferredSemester">
+
+<option>Odd</option>
+<option>Even</option>
+
+</select>
+
+<br><br>
+
+<label>
+
+<input
+type="checkbox"
+name="agreeToTerms"
+required
+[(ngModel)]="student.agreeToTerms">
+
+Agree Terms
+
+</label>
+
+<br><br>
+
+<button
+type="submit"
+[disabled]="enrollForm.invalid">
+
+Submit
+
+</button>
+
+<button
+type="reset"
+(click)="enrollForm.resetForm()">
+
+Reset
+
+</button>
+
+</form>
+
+<div *ngIf="submitted">
+
+<h3>Enrollment request submitted successfully!</h3>
+
+</div>
+
+reactive enrollment form.html
+
+<form [formGroup]="enrollForm" (ngSubmit)="onSubmit()">
+
+    <label>Student Name</label><br>
+
+    <input
+        type="text"
+        formControlName="studentName">
+
+    <div
+        *ngIf="enrollForm.get('studentName')?.touched &&
+               enrollForm.get('studentName')?.errors?.['required']">
+
+        Name is required
+
+    </div>
+
+    <div
+        *ngIf="enrollForm.get('studentName')?.errors?.['minlength']">
+
+        Minimum 3 characters
+
+    </div>
+
+    <br><br>
+
+    <label>Email</label><br>
+
+    <input
+        type="email"
+        formControlName="studentEmail">
+
+    <div
+        *ngIf="enrollForm.get('studentEmail')?.errors?.['emailTaken']">
+
+        Email already exists
+
+    </div>
+
+    <br><br>
+
+    <label>Course ID</label><br>
+
+    <input
+        type="text"
+        formControlName="courseId">
+
+    <div
+        *ngIf="enrollForm.get('courseId')?.errors?.['noCourseCode']">
+
+        Course code starting with XX is not allowed.
+
+    </div>
+
+    <br><br>
+
+    <label>Semester</label><br>
+
+    <select formControlName="preferredSemester">
+
+        <option>Odd</option>
+
+        <option>Even</option>
+
+    </select>
+
+    <br><br>
+
+    <label>
+
+        <input
+            type="checkbox"
+            formControlName="agreeToTerms">
+
+        Agree Terms
+
+    </label>
+
+    <br><br>
+
+    <button
+        type="button"
+        (click)="addCourse()">
+
+        Add Another Course
+
+    </button>
+
+    <br><br>
+
+    <div formArrayName="additionalCourses">
+
+        <div
+            *ngFor="let ctrl of additionalCourses.controls; let i=index">
+
+            <!-- Angular 20 Fix -->
+
+            <input [formControl]="$any(ctrl)">
+
+            <button
+                type="button"
+                (click)="removeCourse(i)">
+
+                Remove
+
+            </button>
+
+            <br><br>
+
+        </div>
+
+    </div>
+
+    <button
+        type="submit"
+        [disabled]="enrollForm.invalid">
+
+        Submit
+
+    </button>
+
+</form>
+
+
+reactive enrollment form.ts
+
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {
+  ReactiveFormsModule,
+  FormBuilder,
+  FormGroup,
+  Validators,
+  FormArray,
+  FormControl,
+  AbstractControl,
+  ValidationErrors,
+  AsyncValidatorFn
+} from '@angular/forms';
+
+@Component({
+  selector: 'app-reactive-enrollment-form',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule],
+  templateUrl: './reactive-enrollment-form.html',
+  styleUrl: './reactive-enrollment-form.css'
+})
+export class ReactiveEnrollmentForm implements OnInit {
+
+  enrollForm!: FormGroup;
+
+  constructor(private fb: FormBuilder) {}
+
+  ngOnInit(): void {
+
+    this.enrollForm = this.fb.group({
+      studentName: ['', [Validators.required, Validators.minLength(3)]],
+
+      studentEmail: [
+        '',
+        [Validators.required, Validators.email],
+        [this.simulateEmailCheck()]
+      ],
+
+      courseId: ['', [Validators.required, this.noCourseCode]],
+
+      preferredSemester: ['Odd', Validators.required],
+
+      agreeToTerms: [false, Validators.requiredTrue],
+
+      additionalCourses: this.fb.array([])
+    });
+
+  }
+
+  noCourseCode(control: AbstractControl): ValidationErrors | null {
+
+    if (control.value && control.value.startsWith('XX')) {
+      return { noCourseCode: true };
+    }
+
+    return null;
+  }
+
+  simulateEmailCheck(): AsyncValidatorFn {
+
+    return (control: AbstractControl) => {
+
+      return new Promise(resolve => {
+
+        setTimeout(() => {
+
+          if (control.value && control.value.includes('test@')) {
+            resolve({ emailTaken: true });
+          } else {
+            resolve(null);
+          }
+
+        }, 800);
+
+      });
+
+    };
+
+  }
+
+  get additionalCourses(): FormArray {
+
+    return this.enrollForm.get('additionalCourses') as FormArray;
+
+  }
+
+  addCourse() {
+
+    this.additionalCourses.push(
+
+      new FormControl('', Validators.required)
+
+    );
+
+  }
+
+  removeCourse(index: number) {
+
+    this.additionalCourses.removeAt(index);
+
+  }
+
+  onSubmit() {
+
+    console.log(this.enrollForm.value);
+
+    console.log(this.enrollForm.getRawValue());
+
+  }
+
+}
+
+
+
+app routers.ts
+
+import { Routes } from '@angular/router';
+import { EnrollmentForm } from './pages/enrollment-form/enrollment-form';
+import { ReactiveEnrollmentForm } from './pages/reactive-enrollment-form/reactive-enrollment-form';
+
+export const routes: Routes = [
+  {
+    path: 'enroll',
+    component: EnrollmentForm
+  },
+  {
+    path: 'enroll-reactive',
+    component: ReactiveEnrollmentForm
+  }
+];

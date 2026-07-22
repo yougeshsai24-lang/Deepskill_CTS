@@ -1,0 +1,91 @@
+auth gaurds.ts
+
+import { CanActivateFn, Router } from '@angular/router';
+import { inject } from '@angular/core';
+
+export const authGuard: CanActivateFn = () => {
+
+  const router = inject(Router);
+
+  const isLoggedIn = true;
+
+  if (isLoggedIn) {
+    return true;
+  }
+
+  router.navigate(['/']);
+
+  return false;
+
+};
+
+
+
+unsaved changes gaurd.ts
+
+import { CanDeactivateFn } from '@angular/router';
+
+export const unsavedChangesGuard: CanDeactivateFn<unknown> = () => {
+
+  return window.confirm('You have unsaved changes. Leave?');
+
+};
+
+
+
+
+app routes.ts
+
+
+import { Routes } from '@angular/router';
+
+import { Home } from './pages/home/home';
+import { CourseList } from './pages/course-list/course-list';
+import { StudentProfile } from './pages/student-profile/student-profile';
+import { CourseDetail } from './pages/course-detail/course-detail';
+import { NotFound } from './pages/not-found/not-found';
+
+import { EnrollmentForm } from './pages/enrollment-form/enrollment-form';
+import { ReactiveEnrollmentForm } from './pages/reactive-enrollment-form/reactive-enrollment-form';
+
+import { authGuard } from './guards/auth-guard';
+
+export const routes: Routes = [
+
+  {
+    path: '',
+    component: Home
+  },
+
+  {
+    path: 'courses',
+    component: CourseList
+  },
+
+  {
+    path: 'courses/:id',
+    component: CourseDetail
+  },
+
+  {
+    path: 'enroll',
+    component: EnrollmentForm
+  },
+
+  {
+    path: 'enroll-reactive',
+    component: ReactiveEnrollmentForm
+  },
+
+  {
+    path: 'profile',
+    component: StudentProfile,
+    canActivate: [authGuard]
+  },
+
+  {
+    path: '**',
+    component: NotFound
+  }
+
+];

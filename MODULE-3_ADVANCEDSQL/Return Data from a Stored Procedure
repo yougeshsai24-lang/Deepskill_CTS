@@ -1,0 +1,14 @@
+USE employee_db;
+
+DELIMITER //
+
+CREATE PROCEDURE sp_GetEmployeeCount(IN dept INT)
+BEGIN
+    SELECT COUNT(*) AS TotalEmployees
+    FROM Employees
+    WHERE DepartmentID = dept;
+END //
+
+DELIMITER ;
+
+CALL sp_GetEmployeeCount(1);

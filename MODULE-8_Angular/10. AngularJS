@@ -1,0 +1,6 @@
+Step 1: Generate the required testing files and setup.
+Step 2: Complete course.service.spec.ts.
+Step 3: Complete course-list.spec.ts.
+Step 4: Complete any remaining component/service test files.
+Step 5: Run the tests (ng test) and fix any failures.
+Step 6: Verify all tests pass.

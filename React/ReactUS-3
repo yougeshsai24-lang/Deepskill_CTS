@@ -1,0 +1,61 @@
+App.js
+
+import CalculateScore from "./Components/CalculateScore";
+
+function App() {
+  return (
+    <div>
+      <CalculateScore
+        Name="Rahul"
+        School="ABC Public School"
+        Total={450}
+        Goal={5}
+      />
+    </div>
+  );
+}
+
+export default App;
+
+caluculator.js
+
+import "./../Stylesheets/mystyle.css";
+
+function CalculateScore(props) {
+  const average = props.Total / props.Goal;
+
+  return (
+    <div className="container">
+      <h2>Student Score Calculator</h2>
+
+      <p><b>Name:</b> {props.Name}</p>
+      <p><b>School:</b> {props.School}</p>
+      <p><b>Total:</b> {props.Total}</p>
+      <p><b>Goal:</b> {props.Goal}</p>
+      <h3>Average Score: {average}</h3>
+    </div>
+  );
+}
+
+export default CalculateScore;
+
+
+mystyle.css
+
+.container {
+    width: 400px;
+    margin: 30px auto;
+    text-align: center;
+    border: 2px solid black;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f2f2f2;
+}
+
+h2 {
+    color: blue;
+}
+
+h3 {
+    color: green;
+}

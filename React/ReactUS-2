@@ -1,0 +1,81 @@
+App.js
+
+import "./App.css";
+import Home from "./Components/Home";
+import About from "./Components/About";
+import Contact from "./Components/Contact";
+
+function App() {
+  return (
+    <div className="container">
+      <Home />
+      <About />
+      <Contact />
+    </div>
+  );
+}
+
+export default App;
+
+
+app.css
+
+.container {
+  text-align: center;   /* Center horizontally */
+  margin-top: 30px;     /* Keep it near the top */
+}
+
+h3 {
+  margin: 15px 0;
+}
+
+
+Home.js
+
+import React, { Component } from "react";
+
+class Home extends Component {
+  render() {
+    return (
+      <div>
+        <h3>Welcome to the Home Page of Student Management Portal</h3>
+      </div>
+    );
+  }
+}
+
+export default Home;
+
+
+about.js
+
+import React, { Component } from "react";
+
+class About extends Component {
+  render() {
+    return (
+      <div>
+        <h3>Welcome to the About Page of Student Management Portal</h3>
+      </div>
+    );
+  }
+}
+
+export default About;
+
+
+contact.js
+
+import React, { Component } from "react";
+
+class Contact extends Component {
+  render() {
+    return (
+      <div>
+        <h3>Welcome to the Contact Page of Student Management Portal</h3>
+      </div>
+    );
+  }
+}
+
+export default Contact;

@@ -1,0 +1,159 @@
+App.js
+
+import { useState } from "react";
+import CurrencyConvertor from "./Components/CurrencyConvertor";
+
+function App() {
+
+  const [count, setCount] = useState(5);
+
+  function increment() {
+    setCount(count + 1);
+  }
+
+  function decrement() {
+    setCount(count - 1);
+  }
+
+  function sayHello() {
+    alert("Hello! Member1");
+  }
+
+  function increase() {
+    increment();
+    sayHello();
+  }
+
+  function welcome(msg) {
+    alert(msg);
+  }
+
+  function onPress() {
+    alert("I was clicked");
+  }
+
+  return (
+
+    <div style={{ margin: "20px" }}>
+
+      <h2>{count}</h2>
+
+      <button onClick={increase}>
+        Increment
+      </button>
+
+      <br /><br />
+
+      <button onClick={decrement}>
+        Decrement
+      </button>
+
+      <br /><br />
+
+      <button onClick={() => welcome("Welcome")}>
+        Say Welcome
+      </button>
+
+      <br /><br />
+
+      <button onClick={onPress}>
+        Click on me
+      </button>
+
+      <CurrencyConvertor />
+
+    </div>
+
+  );
+
+}
+
+export default App;
+
+
+Currencyconverter.js
+
+import { useState } from "react";
+
+function CurrencyConvertor() {
+
+  const [amount, setAmount] = useState("");
+  const [currency, setCurrency] = useState("");
+
+  const handleSubmit = () => {
+
+    const euro = amount / 90;
+
+    alert("Converting to Euro Amount is " + euro.toFixed(2));
+
+  };
+
+  return (
+
+    <div style={{ marginTop: "30px" }}>
+
+      <h1 style={{ color: "green" }}>
+        Currency Convertor!!!
+      </h1>
+
+      <table>
+
+        <tbody>
+
+          <tr>
+
+            <td>Amount:</td>
+
+            <td>
+
+              <input
+                type="number"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+              />
+
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td>Currency:</td>
+
+            <td>
+
+              <input
+                type="text"
+                value={currency}
+                onChange={(e) => setCurrency(e.target.value)}
+              />
+
+            </td>
+
+          </tr>
+
+          <tr>
+
+            <td></td>
+
+            <td>
+
+              <button onClick={handleSubmit}>
+                Submit
+              </button>
+
+            </td>
+
+          </tr>
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+  );
+
+}
+
+export default CurrencyConvertor;

@@ -1,0 +1,41 @@
+cd ~/Desktop/GitDemo
+git status
+git branch GitWork
+git checkout GitWork
+touch hello.xml
+notepad hello.xml
+git add hello.xml
+git commit -m "Added hello.xml in GitWork"
+git checkout master
+notepad hello.xml
+git add hello.xml
+git commit -m "Added hello.xml in master"
+git log --oneline --graph --decorate --all
+git diff master GitWork
+git merge GitWork
+notepad hello.xml
+git add hello.xml
+git commit -m "Resolved merge conflict"
+git status
+notepad .gitignore
+git add .gitignore
+git commit -m "Updated gitignore"
+git branch
+git branch -d GitWork
+git log --oneline --graph --decorate
+git status
+
+
+When notepad hello.xml opens the first time, type:
+
+<message>Hello from GitWork Branch</message>
+
+
+When notepad hello.xml opens the second time, replace it with:
+
+<message>Hello from Master Branch</message>
+
+
+After the merge conflict, replace the conflict markers with:
+
+<message>Hello from Master Branch and GitWork Branch</message>

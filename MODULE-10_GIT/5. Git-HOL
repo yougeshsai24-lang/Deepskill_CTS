@@ -1,0 +1,11 @@
+cd ~/Desktop/GitDemo
+git status
+git branch
+git checkout master
+git pull origin master
+git status
+git add .
+git commit -m "Completed Git HOL 5"
+git push origin master
+git status
+git log --oneline --graph --decorate
